@@ -1,0 +1,1 @@
+-> Link do vídeo produzido para explicar o Trabalho 02 https://youtu.be/CQzrjH3Sqrs

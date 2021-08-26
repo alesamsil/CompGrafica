@@ -4,7 +4,7 @@ Criei esse repositório para organizar meus exercícios resolvidos em aula sobre
 
 -> Sobre: 
 
-Instituição: Universidade Federal Fluminende (UFF)
+Instituição: Universidade Federal Fluminense (UFF)
 
 Docente: Prof°. Dr°. Leonardo De Oliveira Carvalho
 
