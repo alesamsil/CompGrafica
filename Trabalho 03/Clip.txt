@@ -1,0 +1,22 @@
+template<class Varying>
+std::vector<Varying> clip(const std::vector<Varying>& polygon, vec4 n){
+	std::vector<Varying> R;
+
+    for(unsigned int i = 0; i < polygon.size(); i++){
+		Varying P = polygon[i];
+		Varying Q = polygon[(i+1)%polygon.size()];
+        float Pn = dot(P.position, n);
+		float Qn = dot(Q.position, n);
+		bool Pin = Pn >= 0;
+		bool Qin = Qn >= 0;
+        float t = Pn/(Pn-Qn);
+        vec4 Paux = P.position;
+        vec4 Qaux = Q.position;
+		if(Pin != Qin)
+			R.push_back((1- t)*P + t*Q);
+
+		if(Qin)
+			R.push_back(Q);
+	}
+	return R;
+}
