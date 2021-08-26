@@ -1,0 +1,52 @@
+template<class Vertex>
+bool clip(Line<Vertex>& line, Rectangle rect){
+	/**************** TAREFA - AULA 09 **************/
+        int xmin = std::min(rect.x0,rect.x1)+1;
+	    int xmax = std::max(rect.x0,rect.x1)-1;
+	    int ymin = std::min(rect.y0,rect.y1)+1;
+	    int ymax = std::max(rect.y0,rect.y1)-1;
+        /// Primeiro definimos as extremidades do retangulo
+
+        float p[4],q[4];
+        /// Definimos dois vetores que usaremos posteriormente na lógica do código
+
+        vec2 A = line[0].position, B = line[1].position;
+        /// Depois pegamos os pontos da linha atual e chamamos de A e B
+
+        ///Ai vamos começar a parte mais lógica do Algoritmo de Liang-Barsky
+
+        p[0] = (-1)*(B.x - A.x);
+        p[1] = (B.x - A.x);
+        p[2] = (-1)*(B.y - A.y);
+        p[3] = (B.y - A.y);
+
+        q[0] = A.x - xmin;
+        q[1] =  xmax - A.x;
+        q[2] = A.y - ymin;
+        q[3] =  ymax - A.y;
+
+        float t_in = 0, t_out = 1;
+
+        for(int i=0; i<4; i++){
+            if(p[i]<0)
+                t_in = std::max(t_in, q[i]/p[i]);
+            else if(p[i]>0)
+                t_out = std::min(t_out, q[i]/p[i]);
+            else if(q[i] < 0) /// Descartamos segundo o algoritmo se p[i] for zero e q[i] < 0, que significa que a linha não estará no retangulo
+                return false;
+        }
+        if(t_in > t_out){ /// Descartamos se t_in for menor que t_out, pois também significa que a linha não estará no retangulo
+            return false;
+        }else{
+            /// Por fim se confirmamos que não descataremos a linha,
+            /// alteramos os pontos que formam as linhas para a interseção com o retangulo quando antes passava por cima
+            /// e arrumamos a cor dele de acordo com o lerp entre os pontos originais. Em qual t ele se encaixaria entre um lerp dos originais
+            Color cA = line[0].color, cB = line[1].color;
+            line[0].position = lerp(t_in, A, B);
+            line[0].color = lerp(t_in, cA, cB);
+
+            line[1].position = lerp(t_out, A, B);
+            line[1].color = lerp(t_out, cA, cB);
+        }
+        return true; /// E por fim retornamos true com a linha alterada para dentro do quadrado
+}
