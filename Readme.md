@@ -2,6 +2,8 @@ Olá!
 
 Criei esse repositório para organizar meus exercícios resolvidos em aula sobre Computação Gráfica para eventuais consultas.
 
+Cada pasta de trabalho possui os arquivos usados nos programas e no Readme você encontrará os links para os vídeos no youtube com as explicações do exercício proposto.
+
 -> Sobre: 
 
 Instituição: Universidade Federal Fluminense (UFF)
