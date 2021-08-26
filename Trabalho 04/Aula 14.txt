@@ -1,0 +1,130 @@
+RCM00026 - COMPUTAÇÃO GRÁFICA - C1
+2020 / 2º
+Atividades da semana 08
+Leonardo De Oliveira Carvalho
+•
+26 de mar. Editado às 28 de mar.
+10/10
+10 pontos de 10 possíveis
+Data de entrega: 7 de abr.
+Resolvam as tarefas das aulas 14 e 15. Pode ser feito em grupo de até 3 pessoas. A entrega é em vídeo, explicando a resolução, todos do grupo devem falar! Na entrega informem quais são os integrantes do grupo. O vídeo pode ser entregue por apenas um dos integrantes, mas os outros devem ao menos responder indicando que pertencem ao grupo. Podem enviar mais de um vídeo, por exemplo um vídeo por tarefa, por aula, ou por integrante.
+Comentários da turma
+Seus trabalhos
+Com nota
+
+aula14.txt
+Texto
+
+carnage_a.png
+Imagem
+
+EsferaColorida.gif
+Imagem
+
+ExercitoRobos.gif
+Imagem
+
+gray.png
+Imagem
+
+hd_carnage.obj
+Arquivo binário
+
+hd_leo.obj
+Arquivo binário
+
+leo_a.png
+Imagem
+
+mecha2.obj
+Arquivo binário
+
+mecha2a.png
+Imagem
+
+wall.obj
+Arquivo binário
+
+Tarefa 14 e 15.mp4
+Vídeo
+Comentários particulares
+#include <bits/stdc++.h>
+#include <complex>
+#include "Image.h"
+#include "rasterization.h"
+#include "Graphics2D.h"
+#include "Primitives.h"
+#include "vec.h"
+#include "bezier.h"
+#include "matrix.h"
+#include "Graphics3D.h"
+#include "ColorShader.h"
+#include "VertexUtils.h"
+#include "SimpleShader.h"
+#include "TextureShader.h"
+#include "ObjMesh.h"
+
+using namespace std;
+
+int main(){
+    /// Grupo: Rafael de A. Silva, Alessandro Sampaio e Pablo Montel.
+	unsigned int m = 30, n = 30, N = m*n;
+    /// Intervalo do u (u0, u1) e do V (v0, v1).
+	float u0 = 0, u1 = 0.88*(2*M_PI), du = (u1-u0)/(m-1),
+              v0 = 0, v1 = (M_PI), dv = (v1-v0)/(n-1);
+
+	vector<Vec3Col> V(N);
+	for(unsigned int i = 0; i < m; i++){
+		for(unsigned int j = 0; j < n; j++){
+			float u = u0 + i*du;
+			float v = v0 + j*dv;
+
+			unsigned int ij = i + j*m;
+			/// Formula para a esfera
+			V[ij] = {(cos(u) *sin(v)), (sin(u) *sin(v)), cos(v)};
+
+			float s = i/(m-1.0);
+			float t = j/(n-1.0);
+			V[ij].color = bilerp(s, t, red, blue, green, yellow);
+		}
+	}
+    /// Mesma ideia da superficie generica
+	vector<unsigned int> indices;
+	for(unsigned int i = 0; i < m-1; i++){
+		for(unsigned int j = 0; j < n-1; j++){
+			unsigned int ij = i + j*m;
+			indices.insert(indices.end(), {
+				ij, ij+1, ij+m,
+				ij+m+1, ij+m, ij+1
+			});
+		}
+	}
+	Elements<Triangles> T{indices};
+
+	int w = 600, h = 600;
+	Graphics3D G{w, h};
+	/// Pequena mudança no argumento eye da lookAt pra ficar melhor de visualizar em relaçao a superf�cie generica usada como ponto de partida
+	mat4 View = lookAt({3,1,1}, {0, 0, 0}, {0, 0, 1});
+	float a = w/(float)h;
+	mat4 Projection = perspective(50, a, 0.1, 50);
+
+	int nframes = 30;
+	for(int k = 0; k < nframes; ++k){
+		G.clear();
+		G.initZBuffer();
+
+		float theta = k*2*M_PI/nframes;
+		mat4 Model = rotate_z(theta);
+
+		ColorShader::M = Projection*View*Model;
+		G.draw<ColorShader::Varying>(V, T);
+
+		char filename[50];
+		sprintf(filename, "anim/quase/EsferaColorida%03d.png", k);
+		puts(filename);
+		G.savePNG(filename);
+	}
+		return 0;
+}
+aula14.txt
+Exibindo aula14.txt.
