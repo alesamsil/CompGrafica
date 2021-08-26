@@ -1,0 +1,20 @@
+inline mat4 lookAt(vec3 eye, vec3 center, vec3 up){
+
+
+    vec3 UpAux = normalize(up);
+    vec3 F = normalize(center-eye);
+    vec3 S = normalize(cross(F,UpAux));
+    vec3 U = cross(S,F);
+
+    mat4 mv_1 = {
+         S.x,  S.y,  S.z, 0.0,
+         U.x,  U.y,  U.z, 0.0,
+        -F.x, -F.y, -F.z, 0.0,
+         0.0,  0.0,  0.0, 1.0
+    };
+
+    mat4 mv_2 = translate(-eye.x,-eye.y,-eye.z);
+
+    return mv_1  mv_2;
+
+}
